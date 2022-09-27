@@ -1,14 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
-import Router from './routes/Router';
+import { useAppSelector } from './hook';
+import { isLoggedIn, setAuthState } from './utils/authUtils';
+import LoginForm from './component/LoginForm';
+import Chat from './component/Chat';
 
-export const client = new W3CWebSocket('ws://127.0.0.1:3000');
+const PORT = process.env.PORT || 3000;
+
+const client = new W3CWebSocket(`ws://127.0.0.1:${PORT}`);
 
 function App() {
+	const { userName } = useAppSelector((state) => state.user);
+	useEffect(() => {
+		client.onopen = () => {
+			console.log('Websocket client connected');
+		};
+	}, []);
+	const joinRoom = () => {
+		if (userName !== '') {
+			setAuthState(userName);
+			window.location.reload();
+		}
+	};
+
 	return (
 		<div className='App'>
-			<Router />
+			{!isLoggedIn() ? (
+				<LoginForm joinRoom={joinRoom} />
+			) : (
+				<Chat client={client} />
+			)}
 		</div>
 	);
 }

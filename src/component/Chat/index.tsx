@@ -1,16 +1,12 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hook';
 import { messageReceived } from '../../redux/feature/messageSlice';
 import { resetAuthToken } from '../../utils/authUtils';
-import MessageList from '../../component/MessageList';
+import MessageList from '../MessageList';
 import './index.css';
-import { useNavigate } from 'react-router-dom';
 
-const Chat: FC<{
-	client: any;
-}> = ({ client }) => {
+const Chat = ({ client }: { client: any }) => {
 	const [currentMessage, setCurrentMessage] = useState('');
-	let navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const { userName } = useAppSelector((state) => state.user);
 	function padTo2Digits(num: number) {
@@ -69,7 +65,7 @@ const Chat: FC<{
 				<button
 					onClick={() => {
 						resetAuthToken();
-						navigate('/');
+						window.location.reload();
 					}}
 				>
 					Exit
