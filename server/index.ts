@@ -1,4 +1,5 @@
-import express from 'express';
+import { RequestHandler } from 'express';
+const express = require('express');
 const app = express();
 const webSocketsServerPort = 3000;
 const webSocketServer = require('websocket').server;
@@ -7,9 +8,11 @@ const cors = require('cors');
 const path = require('path');
 
 app.use(express.static(path.join(__dirname, '..', 'build')));
-app.get('/', (req, res) => {
+app.use(express.static('public'));
+const myMiddleware: RequestHandler = (req, res, next) => {
 	res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
-});
+};
+app.get('/', myMiddleware);
 
 app.use(cors);
 const server = http.createServer(app);
