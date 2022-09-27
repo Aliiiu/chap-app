@@ -4,24 +4,35 @@ import { messageReceived } from '../../redux/feature/messageSlice';
 import { resetAuthToken } from '../../utils/authUtils';
 import MessageList from '../../component/MessageList';
 import './index.css';
+import { useNavigate } from 'react-router-dom';
 
 const Chat: FC<{
 	client: any;
 }> = ({ client }) => {
 	const [currentMessage, setCurrentMessage] = useState('');
+	let navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const { userName } = useAppSelector((state) => state.user);
+	function padTo2Digits(num: number) {
+		return num.toString().padStart(2, '0');
+	}
 	const sendMessage = () => {
 		if (currentMessage !== '') {
+			let strName = '';
+			if (userName.charAt(0) === userName.charAt(0).toUpperCase()) {
+				strName = userName;
+			} else {
+				const str: string = userName;
+				strName = str.charAt(0).toUpperCase() + str.slice(1);
+			}
 			const messageData = {
-				author: userName,
+				author: strName,
 				message: currentMessage,
 				time:
-					new Date(Date.now()).getHours() +
+					padTo2Digits(new Date(Date.now()).getHours()) +
 					':' +
-					new Date(Date.now()).getMinutes(),
+					padTo2Digits(new Date(Date.now()).getMinutes()),
 			};
-			// console.log(messageData);
 			client.send(JSON.stringify({ type: 'send-message', messageData }));
 		}
 		setCurrentMessage('');
@@ -29,7 +40,6 @@ const Chat: FC<{
 
 	React.useEffect(() => {
 		client.onmessage = (message: any) => {
-			console.log(message);
 			const dataFromServer = JSON.parse(message.data);
 			dispatch(messageReceived(dataFromServer.messageData));
 		};
@@ -59,7 +69,7 @@ const Chat: FC<{
 				<button
 					onClick={() => {
 						resetAuthToken();
-						window.location.reload();
+						navigate('/');
 					}}
 				>
 					Exit

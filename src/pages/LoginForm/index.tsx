@@ -1,10 +1,25 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hook';
+import { createUser } from '../../redux/feature/userSlice';
+import { setAuthState } from '../../utils/authUtils';
 import './index.css';
 
 const LoginForm = () => {
 	const [name, setName] = useState('');
+	let dispatch = useAppDispatch();
+	const { userName } = useAppSelector((state) => state.user);
+	let navigate = useNavigate();
 	const changeHandler = (e: any) => {
 		setName(e.target.value);
+		dispatch(createUser({ name: e.target.value }));
+	};
+	const joinRoom = () => {
+		if (name !== '') {
+			setAuthState(userName);
+		}
+		navigate('/chat');
+		setName('');
 	};
 	return (
 		<div className='joinChatContainer'>
@@ -15,16 +30,10 @@ const LoginForm = () => {
 				value={name}
 				onChange={changeHandler}
 				onKeyDown={(event) => {
-					if (event.key === 'Enter') console.log('Clicked');
+					if (event.key === 'Enter') joinRoom();
 				}}
 			/>
-			<button
-				onClick={() => {
-					setName('');
-				}}
-			>
-				Join A Room
-			</button>
+			<button onClick={joinRoom}>Join A Room</button>
 		</div>
 	);
 };

@@ -6,6 +6,7 @@ import './index.css';
 const MessageList = () => {
 	const { messages } = useAppSelector((state) => state.message);
 	const { userName } = useAppSelector((state) => state.user);
+	const strName = userName.charAt(0).toUpperCase() + userName.slice(1);
 	return (
 		<div className='chat-body'>
 			<ScrollToBottom className='message-container'>
@@ -13,7 +14,7 @@ const MessageList = () => {
 					<div
 						key={idx}
 						className='message'
-						id={userName === item.author ? 'you' : 'other'}
+						id={strName === item.author ? 'you' : 'other'}
 					>
 						<div>
 							<div className='message-content'>

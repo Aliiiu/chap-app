@@ -12,6 +12,7 @@ const Router = () => {
 			<Route
 				path='chat'
 				element={
+					// <Chat client={client} />
 					<PrivateRoute>
 						<Chat client={client} />
 					</PrivateRoute>

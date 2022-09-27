@@ -69,6 +69,7 @@
 .message-meta #author {
 	margin-left: 10px;
 	font-weight: bold;
+	text-transform: capitalize;
 }
 
 .message-meta {
