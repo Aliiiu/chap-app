@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 const express = require('express');
 const app = express();
-const webSocketsServerPort = 3000;
+const webSocketsServerPort = process.env.PORT || 3000;
 const webSocketServer = require('websocket').server;
 const http = require('http');
 const cors = require('cors');
@@ -17,7 +17,7 @@ app.get('/', myMiddleware);
 app.use(cors);
 const server = http.createServer(app);
 server.listen(webSocketsServerPort, () => {
-	console.log('listening on port 3000');
+	console.log(`listening on port ${webSocketsServerPort}`);
 });
 
 const wsServer = new webSocketServer({
